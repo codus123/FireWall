@@ -1,0 +1,60 @@
+R1
+conf t
+int f0/1
+no sh
+ip add 10.1.10.1 255.255.255.0
+!
+router os 1
+net 0.0.0.0 255.255.255.255 a 0
+---
+R2
+conf t
+int f0/0
+no sh
+ip add 1.1.20.2 255.255.255.0
+!
+ip route 0.0.0.0 0.0.0.0 1.1.20.10
+!
+---
+FW
+sh int ip brief: 인터페이스 확인
+conf t
+int g0
+no sh
+nameif inside
+ip add 10.1.10.10 255.255.255.0
+int g1
+no sh
+nameif outside
+ip add 1.1.20.10 255.255.255.0
+!
+route outside 0 0 1.1.20.2
+router os 1
+net 10.1.10.10 255.255.255.255 a 0
+default-inf ori
+ 
+***호스트에 연결이 잘 안되면 관리자 권한으로 GNS 실행***
+***라우터와 컴퓨터 사이에 스위치 위치***
+
+[Password]
+enable password 암호
+passwd 텔넷암호
+
+write erase = erase start + reload
+
+[현재설정 초기화]
+clear config all
+
+[Mode]
+L2/L3: show firewall
+Single/multiple: show mode
+
+[L2/3 변경]
+firewall transparent
+no firewall transparent
+
+[인터페이스 설정]
+int ...
+no shut
+nameif inside
+ip address ...

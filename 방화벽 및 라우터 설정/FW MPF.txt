@@ -1,0 +1,45 @@
+r1
+conf t
+int f0/0
+no sh
+ip add 10.1.10.1 255.255.255.0
+int lo0
+ip add 10.1.1.1 255.255.255.0
+router os 1
+net 10.1.10.1 0.0.0.0 a 0
+net 10.1.1.1 0.0.0.0 a 0
+---
+r2
+conf t
+int f0/0
+no sh
+ip add 1.1.20.2 255.255.255.0
+int lo0
+ip add 1.1.2.2 255.255.255.0
+router os 1
+net 1.1.20.2 0.0.0.0 a 0
+net 1.1.2.2 0.0.0.0 a 0
+---
+fw1
+conf t
+int g0
+no sh
+nameif inside
+ip add 10.1.10.10 255.255.255.0
+int g1
+no sh
+nameif outside
+ip add 1.1.20.10 255.255.255.0
+router os 1
+net 10.1.10.0 255.255.255.0 a 0
+net 1.1.20.0 255.255.255.0 a 0
+
+===
+Ãß°¡
+class-map inspection_default
+match default-inspection-traffic
+
+policy-map global_policy
+class inspection_default
+
+service-policy global_policy global

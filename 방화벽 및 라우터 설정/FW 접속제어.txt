@@ -1,0 +1,36 @@
+(R2) f0/0 - e0 [FW] e1 - f0/0 (R1)
+
+R1
+conf t
+int f0/0
+no sh
+ip add 1.1.10.1 255.255.255.0
+!
+router os 1
+net 1.1.10.1 0.0.0.0 a 0
+!
+---
+R2
+R1
+conf t
+int f0/0
+no sh
+ip add 10.10.10.2 255.255.255.0
+!
+router os 1
+net 10.10.10.2 0.0.0.0 a 0
+---
+FW
+conf t
+int g0
+no sh
+nameif inside
+ip add 10.10.10.10 255.255.255.0
+int g1
+no sh
+nameif outside
+ip add 1.1.10.10 255.255.255.0
+!
+router os 1
+net 1.1.10.0 255.255.255.0 a 0
+net 10.10.10.0 255.255.255.0 a 0
