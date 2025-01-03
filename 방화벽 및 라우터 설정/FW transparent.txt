@@ -1,0 +1,51 @@
+FW
+int BVI 1
+    ip add 10.1.12.10 255.255.255.0
+int g0
+    no sh
+    bridge-gr 1
+    nameif inside
+int g1
+    no sh
+    bridge-gr 1
+    nameif outside
+---
+r1
+conf t
+int f0/0
+no sh
+ip add 10.1.12.1 255.255.255.0
+int lo0
+ip add 10.1.1.1 255.255.255.0
+---
+r2
+conf t
+int f0/0
+no sh
+ip add 10.1.12.2 255.255.255.0
+int f0/1
+no sh
+ip add 1.1.23.2 255.255.255.0
+int lo0
+ip add 10.1.2.2 255.255.255.0
+---
+r3
+conf t
+int f0/0
+no sh
+ip add 1.1.23.3 255.255.255.0
+int lo0
+ip add 1.1.3.3 255.255.255.0
+ip route 1.1.1.0 255.255.255.0 1.1.23.2
+===
+r1
+router os 1
+net 10.1.12.1 0.0.0.0 a 0
+net 10.1.1.1 0.0.0.0 a 0
+---
+r2
+ip route 0.0.0.0 0.0.0.0 1.1.23.3
+router os 1
+net 10.1.2.2 0.0.0.0 a 0
+net 10.1.12.2 0.0.0.0 a 0
+default-inf ori
